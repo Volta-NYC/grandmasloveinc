@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next";
 import { Fraunces, Inter } from "next/font/google";
 import Navbar from "@/lib/components/navbar";
 import Footer from "@/lib/components/footer";
+import { OrganizationJsonLd } from "@/lib/components/JsonLd";
 import { site } from "@/content/site";
 
 const fraunces = Fraunces({
@@ -72,6 +73,7 @@ export default function RootLayout({
         >
           Skip to main content
         </a>
+        <OrganizationJsonLd />
         <Navbar />
         <main id="main" className="flex-1">
           {children}
