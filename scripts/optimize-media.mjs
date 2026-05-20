@@ -56,9 +56,6 @@ const JOBS = [
   { src: "blog-supporting.png", out: "blog-supporting", width: 1200, blur: true },
   { src: "blog-fighting.png", out: "blog-fighting", width: 1200, blur: true },
 
-  // Brand mark (heart illustration) — trim the white frame, keep crisp
-  { src: "logo.jpg", out: "logo", width: 640, trim: true, blur: false },
-
   // Donation QR — keep lossless + crisp
   { src: "qr-caregivers.png", out: "qr-caregivers", width: 520, format: "png" },
 
@@ -119,9 +116,48 @@ async function run() {
     }
   }
 
+  await deriveBrandIcons();
+
   await writeFile(BLUR_OUT, JSON.stringify(blurMap, null, 2) + "\n");
   console.log(`\n${count} assets written to public/images`);
   console.log(`blur placeholders -> ${path.relative(ROOT, BLUR_OUT)}`);
+}
+
+/**
+ * Derives the transparent brand mark and favicons from the master heart logo
+ * (public/images/icon.avif), so the logo + favicon stay in sync with the
+ * source artwork.
+ */
+async function deriveBrandIcons() {
+  const ICON_SRC = path.join(OUT, "icon.avif");
+  if (!existsSync(ICON_SRC)) {
+    console.warn("skip brand icons (missing public/images/icon.avif)");
+    return;
+  }
+  const APP = path.join(ROOT, "src", "app");
+  const trimmed = await sharp(ICON_SRC).trim({ threshold: 8 }).toBuffer();
+
+  // Header/footer brand mark — transparent webp
+  await sharp(trimmed)
+    .resize({ width: 640, withoutEnlargement: true })
+    .webp({ quality: 92 })
+    .toFile(path.join(OUT, "logo-mark.webp"));
+
+  // Favicon — transparent, square
+  await sharp(trimmed)
+    .resize({ width: 64, height: 64, fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } })
+    .png()
+    .toFile(path.join(APP, "icon.png"));
+
+  // Apple touch icon — opaque paper background (Apple ignores alpha)
+  await sharp(trimmed)
+    .resize({ width: 150, height: 150, fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } })
+    .extend({ top: 15, bottom: 15, left: 15, right: 15, background: { r: 252, g: 247, b: 240, alpha: 1 } })
+    .flatten({ background: "#fcf7f0" })
+    .png()
+    .toFile(path.join(APP, "apple-icon.png"));
+
+  console.log("brand icons -> logo-mark.webp, src/app/icon.png, src/app/apple-icon.png");
 }
 
 run().catch((err) => {

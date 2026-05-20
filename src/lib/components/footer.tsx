@@ -50,13 +50,15 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <div className="flex items-center gap-3">
-              <Image
-                src="/images/logo.webp"
-                alt="Grandma's Love, Inc. logo"
-                width={56}
-                height={56}
-                className="h-14 w-14 rounded-full bg-white object-contain p-1"
-              />
+              <span className="grid h-16 w-16 shrink-0 place-items-center rounded-2xl bg-white p-1.5 shadow-soft">
+                <Image
+                  src="/images/logo-mark.webp"
+                  alt="Grandma's Love, Inc. logo"
+                  width={302}
+                  height={274}
+                  className="h-full w-full object-contain"
+                />
+              </span>
               <div>
                 <p className="font-display text-xl font-semibold text-white">
                   Grandma&rsquo;s Love, Inc.

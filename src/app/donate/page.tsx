@@ -138,11 +138,11 @@ export default function DonatePage() {
         <Container size="narrow" className="text-center">
           <Reveal>
             <Image
-              src="/images/logo.webp"
+              src="/images/logo-mark.webp"
               alt="Grandma's Love, Inc. logo"
-              width={96}
-              height={96}
-              className="mx-auto h-24 w-24 object-contain"
+              width={302}
+              height={274}
+              className="mx-auto h-28 w-auto object-contain"
             />
             <h2 className="mt-6 font-display text-2xl font-semibold text-ink sm:text-3xl">
               Thank you for being part of our mission
