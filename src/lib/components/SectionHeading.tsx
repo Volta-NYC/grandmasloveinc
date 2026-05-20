@@ -47,7 +47,9 @@ export function SectionHeading({
         <p
           className={cn(
             "max-w-2xl text-lg leading-relaxed text-ink-soft",
-            align === "center" && "mx-auto",
+            // Balance short copy so we never strand a single word on its own
+            // line (e.g. a lone "hungry."); browsers ignore this past ~6 lines.
+            align === "center" ? "mx-auto text-balance" : "text-pretty",
           )}
         >
           {description}
